@@ -61,7 +61,7 @@
             "source": "[parameters('source')]",
             "mutationInfo": {
               "sourceType": "PublicURL",
-              "url": "https://github.com/warroyo/tmc-az-pinniped-mutate/refs/heads/main/mutate.yml"
+              "url": "https://raw.githubusercontent.com/warroyo/tmc-az-pinniped-mutate/refs/heads/main/mutate.yml"
             },
             "excludedNamespaces": "[parameters('excludedNamespaces')]"
           }

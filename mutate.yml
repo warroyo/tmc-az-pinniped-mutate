@@ -5,7 +5,8 @@ metadata:
 spec:
   match:
     scope: Namespaced
-    name: vmware-system-tmc
+    namespaces: ['vmware-system-tmc']
+    name: cluster-auth-pinniped-impersonation-proxy-load-balancer
     kinds:
     - apiGroups: ["v1"]
       kinds: ["Service"]
