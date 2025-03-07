@@ -1,0 +1,15 @@
+apiVersion: mutations.gatekeeper.sh/v1
+kind: AssignMetadata
+metadata:
+  name: pinniped-internal
+spec:
+  match:
+    scope: Namespaced
+    name: vmware-system-tmc
+    kinds:
+    - apiGroups: ["v1"]
+      kinds: ["Service"]
+  location: 'metadata.annotations."service.beta.kubernetes.io/azure-load-balancer-internal"'
+  parameters:
+    assign:
+      value:  "true"
