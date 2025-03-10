@@ -8,9 +8,9 @@ spec:
     namespaces: ['vmware-system-tmc']
     name: cluster-auth-pinniped-impersonation-proxy-load-balancer
     kinds:
-    - apiGroups: [""]
+    - apiGroups: ["*"]
       kinds: ["Service"]
-  location: 'metadata.annotations."service.beta.kubernetes.io/azure-load-balancer-internal"'
+  location: metadata.annotations."service.beta.kubernetes.io/azure-load-balancer-internal"
   parameters:
     assign:
       value:  "true"
