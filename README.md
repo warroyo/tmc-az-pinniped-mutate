@@ -20,11 +20,10 @@ If the pinniped credential issuer gets created before the policy is in place you
 
 `az aks enable-addons --resource-group $resourceGroupName --name $clusterName --addons azure-policy`
 
-if you hit the race condition and need to apply the policy after the fact you can use these commands
+if you hit the race condition and need to apply the policy after the fact you can use this command. This will allow for the mutation to apply to the issuer and after a few seconds the load balancer should be updated with an internal IP. if it is not updated you can delete the pinniped loadBalancer service and it will take affect.
 
 ```
-kubectl annotate credentialissuer cluster-auth-pinniped-config apply_mutate=true  # this will mutate the spec of the credentialissuer
-kubectl delete svc cluster-auth-pinniped-impersonation-proxy-load-balancer -n vmware-system-tmc # this will allow the issuer to recreate the LB with the correct annotations
+kubectl annotate credentialissuer cluster-auth-pinniped-config apply_mutate=true  
 ```
 
 ### Checking to see if the policy is working
