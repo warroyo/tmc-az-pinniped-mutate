@@ -1,16 +1,19 @@
 apiVersion: mutations.gatekeeper.sh/v1
-kind: AssignMetadata
+kind: Assign
 metadata:
   name: pinniped-internal
 spec:
+  applyTo:
+  - groups: ["config.concierge.pinniped.tmc.cloud.vmware.com"]
+    kinds: ["CredentialIssuer"]
+    versions: ["v1alpha1"]
   match:
-    scope: Namespaced
-    namespaces: ['vmware-system-tmc']
-    name: cluster-auth-pinniped-impersonation-proxy-load-balancer
+    scope: Cluster
+    name: cluster-auth-pinniped-config
     kinds:
     - apiGroups: ["*"]
-      kinds: ["Service"]
-  location: metadata.annotations."service.beta.kubernetes.io/azure-load-balancer-internal"
+      kinds: ["CredentialIssuer"]
+  location: spec.impersonationProxy.service.annotations."service.beta.kubernetes.io/azure-load-balancer-internal"
   parameters:
     assign:
       value:  "true"
