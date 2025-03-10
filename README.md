@@ -4,7 +4,7 @@ Simple exmaple of a gatekeeper mutate policy dpeloyed through azure policy manag
 
 
 ## Create the policy
-Go to the policy section in zure and create a new defintion. use the `azure-policy.json` as the contents and select the category as kubernetes.
+Go to the policy section in azure and create a new defintion. use the `azure-policy.json` as the contents and select the category as kubernetes.
 
 ## Assing the policy
 
@@ -14,19 +14,22 @@ Assing this policy to the resource group that your clusters will be deployed in.
 
 When provisioning a cluster in TMC there is not an option to enable the policy addon directly, in azure you can enable autoprovisioning in the defender settings to enable this addon by default. If you have the enabled then you can skip the step of enabling it diretcly on the cluster after TMC provisions it.
 
-If you don't have the autoprovisioning enabled, once the cluster is in creation , go to the azure console or cli and enable the policy addon, this will allow for the mutate policy to take affect as soon as possible. You may recieve an error about an ongoing operation and will need to retry or wait until the initial create completes, this will work if the cluster is still being created by TMC it just needs to happen between the create and the compute creating. If the pinniped service gets created before the policy is in place you will need to delete the pinniped service so that it can recreate and the mutation will then take effect. This is very dependent on the azure speed of enabling policy and pushing the policy so it's very possible it does not get created prior. 
+If you don't have the autoprovisioning enabled, once the cluster is in creation , go to the azure console or cli and enable the policy addon, this will allow for the mutate policy to take affect as soon as possible. You may recieve an error about an ongoing operation and will need to retry or wait until the initial create completes, this will work if the cluster is still being created by TMC it just needs to happen between the create and the compute creating. 
+
+If the pinniped credential issuer gets created before the policy is in place you will need to edit the pinniped credential issuer the mutation will then take effect. This is very dependent on the azure speed of enabling policy and pushing the policy so it's very possible it does not get created prior. 
 
 `az aks enable-addons --resource-group $resourceGroupName --name $clusterName --addons azure-policy`
 
-if you need to recreate the service you can use this command 
+if you hit the race condition and need to apply the policy after the fact you can use these commands
 
 ```
-kubectl delete svc cluster-auth-pinniped-impersonation-proxy-load-balancer -n vmware-system-tmc
+kubectl annotate credentialissuer cluster-auth-pinniped-config apply_mutate=true  # this will mutate the spec of the credentialissuer
+kubectl delete svc cluster-auth-pinniped-impersonation-proxy-load-balancer -n vmware-system-tmc # this will allow the issuer to recreate the LB with the correct annotations
 ```
 
 ### Checking to see if the policy is working
 
-you should see a `assignMetadata` resource in the cluster after the policy addon is enabled.
+you should see a `assign` resource in the cluster after the policy addon is enabled.
 
 ```bash
 k get assignmetadata -A                            
