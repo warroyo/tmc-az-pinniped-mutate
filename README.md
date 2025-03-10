@@ -31,7 +31,7 @@ kubectl annotate credentialissuer cluster-auth-pinniped-config apply_mutate=true
 you should see a `assign` resource in the cluster after the policy addon is enabled.
 
 ```bash
-k get assignmetadata -A                            
+k get assign -A                            
 NAME                                                 AGE
 azurepolicy-pinniped-internal-c79dbb0e530e4721be88   4s
 ```
